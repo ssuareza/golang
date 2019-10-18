@@ -19,7 +19,7 @@ func df() {
 
 func Command() *cobra.Command {
 	var cmd = &cobra.Command{
-		Use:   "ls",
+		Use:   "df",
 		Short: "Hugo is a very fast static site generator",
 		Long: `A Fast and Flexible Static Site Generator built with
 					  love by spf13 and friends in Go.
