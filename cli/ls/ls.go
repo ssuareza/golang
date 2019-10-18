@@ -20,10 +20,11 @@ func ls() {
 func Command() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "ls",
-		Short: "Hugo is a very fast static site generator",
-		Long: `A Fast and Flexible Static Site Generator built with
-					  love by spf13 and friends in Go.
-					  Complete documentation is available at http://hugo.spf13.com`,
+		Short: "List directory contents",
+		Long: `For each operand that names a file of a type other than directory, ls displays
+			   its name as well as any requested, associated information.  For each operand
+			   that names a file of type directory, ls displays the names of files contained
+			   within that directory, as well as any requested, associated information`,
 		Run: func(cmd *cobra.Command, args []string) {
 			ls()
 		},
