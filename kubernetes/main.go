@@ -41,7 +41,9 @@ func (o *k8s) getNamespaces() {
 		fmt.Fprintf(os.Stderr, "error listing namespaces: %v", err)
 		os.Exit(1)
 	}
-	fmt.Printf("%T\n", namespaces)
+
+	// Print type
+	//fmt.Printf("%T\n", namespaces)
 
 	for _, namespace := range namespaces.Items {
 		fmt.Println(namespace.Name)
@@ -78,6 +80,33 @@ func (o *k8s) getNodes() {
 	//return fmt.Sprintf("%s", nodes), nil
 }
 
+
+// Logs
+type PodExpansion interface {
+    Bind(binding *v1.Binding) error
+    Evict(eviction *policy.Eviction) error
+    GetLogs(name string, opts *v1.PodLogOptions) *restclient.Request
+}
+
+func (o *k8s, pod corev1.Pod) getLogs() {
+	podLogOpts := corev1.PodLogOptions{}
+	pod.Namespace := "security"
+	pod.Name := "workermailer-20191014084950-64b5c84cf8-zg4gv"
+	//podLogOpts := "{Follow: true, Container: 'workermailer'}"
+	logs, err := o.clientset.CoreV1().Pods(pod.Namespace).GetLogs(pod.Name, &podLogOpts)
+	//logs, err := o.clientset.Core
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error getting logs: %v", err)
+		os.Exit(1)
+	}
+
+	fmt.Println(logs)
+	//return fmt.Sprintf("%s", logs), nil
+	/*for _, node := range nodes.Items {
+		fmt.Printf("Node: %s\n", node.Name)
+	}*/
+}
+
 func main() {
 	// init
 	k8s, err := connect()
@@ -101,5 +130,8 @@ func main() {
 	//k8s.getPods()
 
 	// getNamespaces
-	k8s.getNamespaces()
+	//k8s.getNamespaces()
+
+	// getLogs
+	k8s.getLogs()
 }
