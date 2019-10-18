@@ -4,6 +4,7 @@ import (
 	"github.com/Typeform/tfcli/cmd/tf/config"
 	"github.com/ansel1/merry"
 	"github.com/spf13/cobra"
+	"github.com/ssuareza/goland/cli/df"
 	"github.com/ssuareza/goland/cli/ls"
 )
 
@@ -21,6 +22,7 @@ func main() {
 
 	cmd.PersistentFlags().BoolVar(&config.Config.Debug, "debug", false, "Enable debug output")
 	cmd.AddCommand(ls.Command())
+	cmd.AddCommand(df.Command())
 
 	cmd.Execute()
 }

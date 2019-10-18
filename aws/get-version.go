@@ -1,4 +1,4 @@
-/* go run ssm.go security admin */
+/* go run get-version.go security admin */
 package main
 
 import (
@@ -40,4 +40,3 @@ func main() {
 	value := *param.Parameter.Value
 	fmt.Println(value)
 }
-

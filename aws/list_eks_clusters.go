@@ -1,4 +1,4 @@
-/* go run list_clusters.go */
+/* go run list_eks_clusters.go */
 package main
 
 import (
