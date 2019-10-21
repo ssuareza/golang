@@ -1,6 +1,6 @@
 package main
 
-import "github.com/ssuareza/goland/hello/hello"
+import "./hello"
 
 func main() {
 	hello.Hello()
