@@ -1,0 +1,6 @@
+replicas: 2
+anothervalue: 44
+api_key: AAAAA
+db_user: BBBBB
+api_secret: CCCC
+db_pass: DDDD

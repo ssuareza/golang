@@ -1,0 +1,9 @@
+deploy:
+  replicas: 2
+  anothervalue: 44
+config:
+  api_key: 'AAAAA'
+  db_user: 'BBBBB'
+secrets:
+  api_secret: 'CCCC'
+  db_pass: 'DDDD'
