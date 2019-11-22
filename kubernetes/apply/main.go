@@ -24,7 +24,6 @@ func main() {
 	// variables
 	// fill your values here
 	file := "configmap.yaml"
-	context := "YOUR_KUBECONFIG_CONTEXT"
 	namespace := "NAMESPACE"
 
 	// kubeconfig
@@ -33,12 +32,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// switching context
-	loadingRules := clientcmd.NewDefaultClientConfigLoadingRules()
-	cfgOverrides := &clientcmd.ConfigOverrides{CurrentContext: context}
-	override := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(loadingRules, cfgOverrides)
-	cfg, err = override.ClientConfig()
 
 	// dynamic client
 	client, err := dynamic.NewForConfig(cfg)

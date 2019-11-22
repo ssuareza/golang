@@ -21,7 +21,6 @@ func main() {
 
 	// variables
 	// fill your values here
-	context := "YOUR_KUBECONFIG_CONTEXT"
 	namespace := "NAMESPACE"
 	label := "POD_LABEL"
 
@@ -31,12 +30,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// switching context
-	loadingRules := clientcmd.NewDefaultClientConfigLoadingRules()
-	cfgOverrides := &clientcmd.ConfigOverrides{CurrentContext: context}
-	override := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(loadingRules, cfgOverrides)
-	cfg, err = override.ClientConfig()
 
 	// clientset
 	clientset, err := kubernetes.NewForConfig(cfg)
