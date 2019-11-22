@@ -18,8 +18,8 @@ type Config struct {
 func main() {
 	// files
 	input := "input.yaml"
-	template := "test.tpl"
-	output := "test.out"
+	template := "template.tpl"
+	output := "output.out"
 
 	// context constructor
 	yamlFile, err := ioutil.ReadFile(input)
