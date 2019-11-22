@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-20191121150734
+  labels:
+    app: test
+    version: "4529"
+    deploy: test-20191121150734
+  namespace: security
+data:
+  value1: "AAA"
+  value2: "BBB"
