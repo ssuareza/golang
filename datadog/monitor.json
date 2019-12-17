@@ -1,0 +1,10 @@
+{
+    "type": "metric alert",
+    "query": "avg(last_5m):sum:kubernetes.containers.running{kube_environment:prod,kube_service:webserver,short_image:webserver} < 2",
+    "name": "my monitor name",
+    "message": "@email@domain.com",
+    "options": {
+        "notify_no_data": true,
+        "no_data_timeframe": 20
+    }
+}
