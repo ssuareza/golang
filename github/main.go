@@ -1,4 +1,4 @@
-// Example of listing repositories in Github
+// Example of creating a new repo in Github inside an organization and adding Admin rights to a team (just fill the variables)
 package main
 
 import (
@@ -6,12 +6,16 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/google/go-github/github" // with go modules disabled
+	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
 )
 
 func main() {
-	token := "ADD_YOUR_TOKEN_HERE"
+	token := "YOUR_TOKEN_HERE"
+	team := "TEAM_NAME"
+	organization := "ORGANIZATION"
+	repository := "REPO_NAME"
+
 	ctx := context.Background()
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
@@ -20,13 +24,32 @@ func main() {
 
 	client := github.NewClient(tc)
 
-	// list all repositories for the authenticated user
-	repos, _, err := client.Repositories.List(ctx, "", nil)
+
+	// get team ID
+	team, _, err := client.Teams.GetTeamBySlug(ctx, organization, team)
+	if err != nil {
+		log.Fatal(err)
+	teamID := team.GetID()
+
+	// create repo
+	r := &github.Repository{
+		Name:        github.String(repository),
+		Private:     github.Bool(true),
+		TeamID:      &teamID,
+		Permissions: &map[string]bool{"admin": true},
+	}
+
+	_, _, err = client.Repositories.Create(ctx, organization, r)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	for _, repo := range repos {
-		fmt.Printf("%s\n", *repo.Name)
+	// set permissions
+	opts := github.TeamAddTeamRepoOptions{
+		Permission: "admin",
+	}
+	_, err = client.Teams.AddTeamRepoBySlug(ctx, organization, team, organization, repository, &opts)
+	if err != nil {
+		log.Fatal(err)
 	}
 }
