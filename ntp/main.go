@@ -26,6 +26,6 @@ func main() {
 	now := time.Now()
 	fmt.Println("NOW", now)
 
-	diff := now.Sub(ntpTime)
-	fmt.Println("DIFF", math.Round(diff.Seconds()))
+	diff := math.Round(now.Sub(ntpTime).Seconds())
+	fmt.Println("DIFF", diff)
 }
