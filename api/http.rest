@@ -1,0 +1,10 @@
+@url=http://localhost:8888
+@auth=http://admin:admin@localhost:8888
+
+### health
+GET {{url}}/healthz
+Content-Type: application/json
+
+### auth
+GET {{auth}}/auth
+Content-Type: application/json
