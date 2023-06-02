@@ -1,6 +1,7 @@
 package router
 
 import (
+	"api/pkg/env"
 	md "api/pkg/middleware"
 
 	"github.com/go-chi/chi"
@@ -13,16 +14,11 @@ import (
 	"time"
 )
 
-var (
-	username = "admin"
-	password = "admin"
-)
-
 // Router holds the logic to handle HTTP requests.
 type Router http.Handler
 
 // Handler configures the service endpoints and returns the HTTP router.
-func New(l zerolog.Logger) Router {
+func New(e *env.Env, l zerolog.Logger) Router {
 	// initialize go-chi router
 	r := chi.NewRouter()
 
@@ -41,7 +37,7 @@ func New(l zerolog.Logger) Router {
 
 	// define endpoints with basic auth
 	r.Group(func(r chi.Router) {
-		r.Use(md.BasicAuth(username, password))
+		r.Use(md.BasicAuth(e.APIUser, e.APIPass))
 		r.Get("/auth", Healthz)
 	})
 
