@@ -3,6 +3,7 @@ package memcache
 import (
 	"filesplit/pkg/filesplit"
 	"fmt"
+	"strings"
 
 	memcache "github.com/bradfitz/gomemcache/memcache"
 )
@@ -40,18 +41,23 @@ func (c *Client) Set(file *filesplit.File) error {
 }
 
 // Get gets the file from memcached.
-func (c *Client) Get(file string) error {
+func (c *Client) Get(file string) ([]byte, error) {
 	// get index
 	i, err := c.db.Get(file)
 	if err != nil {
-		return err
+		return nil, err
+	}
+	index := strings.Split(string(i.Value), " ")
+
+	// merge chunks from index
+	var fileBytes []byte
+	for _, chunk := range index {
+		c, err := c.db.Get(chunk)
+		if err != nil {
+			return nil, err
+		}
+		fileBytes = append(fileBytes, c.Value...)
 	}
 
-	// index := string(i.Value)
-
-	for _, v := range i.Value {
-		fmt.Println(string(v))
-	}
-
-	return nil
+	return fileBytes, nil
 }

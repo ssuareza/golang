@@ -11,7 +11,7 @@ import (
 )
 
 func help() {
-	fmt.Println("Usage: go run cmd/filesplit/main.go <set|get> <file>")
+	fmt.Println("Usage: go run cmd/filesplit/main.go <set|get|delete> <file>")
 	flag.PrintDefaults()
 	os.Exit(1)
 }
@@ -21,7 +21,7 @@ func init() {
 	if len(os.Args) != 3 {
 		help()
 	}
-	if os.Args[1] != "set" && os.Args[1] != "get" {
+	if os.Args[1] != "set" && os.Args[1] != "get" && os.Args[1] != "delete" {
 		help()
 	}
 }
@@ -55,11 +55,24 @@ func main() {
 		fmt.Println("DONE")
 	case "get":
 		// get chunks
-		err = cache.Get(os.Args[2])
+		content, err := cache.Get(os.Args[2])
 		if err != nil {
 			log.Fatal(err)
 		}
 
+		// save to a file
+		f, err := os.Create(os.Args[2])
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer f.Close()
+
+		_, err = f.Write(content)
+		if err != nil {
+			log.Fatal(err)
+		}
+	case "delete":
+		fmt.Println("DELETE")
 	default:
 		help()
 	}

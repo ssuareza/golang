@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -22,7 +23,7 @@ type Chunk struct {
 // File represents the splitted file.
 type File struct {
 	Name   string
-	Index  []string
+	Index  string
 	Chunks []Chunk
 }
 
@@ -70,5 +71,5 @@ func Split(file string) (*File, error) {
 		index = append(index, chunkName)
 	}
 
-	return &File{Name: file, Index: index, Chunks: chunks}, nil
+	return &File{Name: file, Index: strings.Join(index, " "), Chunks: chunks}, nil
 }

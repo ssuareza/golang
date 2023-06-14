@@ -1,6 +1,6 @@
 # filesplit
 
-A command to save a file into Memcached.
+A cli to split and save a file into Memcached.
 
 ## Usage
 
