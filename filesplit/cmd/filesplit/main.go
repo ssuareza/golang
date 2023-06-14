@@ -54,7 +54,7 @@ func main() {
 
 		fmt.Println("DONE")
 	case "get":
-		// get chunks
+		// get file content
 		content, err := cache.Get(os.Args[2])
 		if err != nil {
 			log.Fatal(err)
