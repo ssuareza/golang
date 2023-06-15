@@ -25,7 +25,7 @@ docker compose exec filesplit go run cmd/filesplit/main.go get file.txt
 ### Delete file
 
 ```bash
-docker compose exec filesplit go run cmd/filesplit/main.go del file.txt
+docker compose exec filesplit go run cmd/filesplit/main.go delete file.txt
 ```
 
 ## Dependencies

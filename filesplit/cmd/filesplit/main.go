@@ -2,7 +2,7 @@ package main
 
 import (
 	"filesplit/pkg/env"
-	"filesplit/pkg/filesplit"
+	"filesplit/pkg/file"
 	"filesplit/pkg/memcache"
 	"flag"
 	"fmt"
@@ -34,45 +34,42 @@ func main() {
 	}
 
 	// initialize memcache client
-	cache, err := memcache.NewClient(env.MemcachedURL)
+	client, err := memcache.NewClient(env.MemcachedURL)
 	if err != nil {
 		panic(err)
 	}
 
 	switch os.Args[1] {
 	case "set":
-		// split file
-		file, err := filesplit.Split(os.Args[2])
+		// initialize new file
+		f, err := file.New(os.Args[2])
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		// store chunks
-		if err := cache.Set(file); err != nil {
+		// set file
+		if err := memcache.SetFile(client, f); err != nil {
 			log.Fatal(err)
 		}
 
 		fmt.Println("DONE")
 	case "get":
 		// get file content
-		content, err := cache.Get(os.Args[2])
+		content, err := memcache.GetFile(client, os.Args[2])
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		// save to a file
-		f, err := os.Create(os.Args[2])
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer f.Close()
-
-		_, err = f.Write(content)
-		if err != nil {
+		if err := file.Save(os.Args[2], content); err != nil {
 			log.Fatal(err)
 		}
 	case "delete":
-		fmt.Println("DELETE")
+		// if err := cache.Delete(os.Args[2]); err != nil {
+		// 	log.Fatal(err)
+		// }
+
+		// fmt.Println("DELETED")
 	default:
 		help()
 	}

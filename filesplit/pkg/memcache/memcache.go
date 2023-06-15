@@ -1,38 +1,42 @@
 package memcache
 
 import (
-	"filesplit/pkg/filesplit"
+	"filesplit/pkg/file"
 	"fmt"
 	"strings"
 
 	memcache "github.com/bradfitz/gomemcache/memcache"
 )
 
-type Client struct {
-	db *memcache.Client
+// Client is an interface used to add compatibiliy with unit tests.
+type Client interface {
+	Get(key string) (*memcache.Item, error)
+	Set(item *memcache.Item) error
+	Delete(key string) error
 }
 
-func NewClient(server string) (*Client, error) {
+// NewClient creates a new memcache client.
+func NewClient(server string) (Client, error) {
 	client := memcache.New(server)
 
 	if err := client.Ping(); err != nil {
 		return nil, err
 	}
 
-	return &Client{client}, nil
+	return client, nil
 }
 
-// SetChunks sets the file in memcached.
-func (c *Client) Set(file *filesplit.File) error {
+// SetFile sets a file in memcached.
+func SetFile(c Client, f *file.File) error {
 	// set index
-	index := fmt.Sprint(file.Index)
-	if err := c.db.Set(&memcache.Item{Key: file.Name, Value: []byte(index)}); err != nil {
+	index := fmt.Sprint(f.Index)
+	if err := c.Set(&memcache.Item{Key: f.Name, Value: []byte(index)}); err != nil {
 		return err
 	}
 
 	// set chunks
-	for _, chunk := range file.Chunks {
-		if err := c.db.Set(&memcache.Item{Key: chunk.Key, Value: chunk.Value}); err != nil {
+	for _, chunk := range f.Chunks {
+		if err := c.Set(&memcache.Item{Key: chunk.Key, Value: chunk.Value}); err != nil {
 			return err
 		}
 	}
@@ -40,10 +44,10 @@ func (c *Client) Set(file *filesplit.File) error {
 	return nil
 }
 
-// Get gets the file from memcached.
-func (c *Client) Get(file string) ([]byte, error) {
+// GetFile gets the file from memcached.
+func GetFile(c Client, file string) ([]byte, error) {
 	// get index
-	i, err := c.db.Get(file)
+	i, err := c.Get(file)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +56,7 @@ func (c *Client) Get(file string) ([]byte, error) {
 	// merge chunks from index
 	var fileBytes []byte
 	for _, chunk := range index {
-		c, err := c.db.Get(chunk)
+		c, err := c.Get(chunk)
 		if err != nil {
 			return nil, err
 		}
@@ -61,3 +65,28 @@ func (c *Client) Get(file string) ([]byte, error) {
 
 	return fileBytes, nil
 }
+
+// // Delete deletes the file from memcached.
+// func (c *Client) Delete(file string) error {
+// 	// get index
+// 	i, err := c.db.Get(file)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	index := strings.Split(string(i.Value), " ")
+
+// 	// delete chunks from index
+// 	for _, chunk := range index {
+// 		err := c.db.Delete(chunk)
+// 		if err != nil {
+// 			return err
+// 		}
+// 	}
+
+// 	// delete index
+// 	if err := c.db.Delete(file); err != nil {
+// 		return err
+// 	}
+
+// 	return nil
+// }

@@ -1,4 +1,4 @@
-package filesplit
+package file
 
 import (
 	"fmt"
@@ -14,6 +14,10 @@ const (
 	fileMaxSize = 52428800 // 50MB
 )
 
+var (
+	errMaxSize error = fmt.Errorf("sorry, we don't process files larger than %v bytes", fileMaxSize)
+)
+
 // Chunk contains the file split.
 type Chunk struct {
 	Key   string
@@ -27,8 +31,8 @@ type File struct {
 	Chunks []Chunk
 }
 
-// Split splits a file in smaller pieces.
-func Split(file string) (*File, error) {
+// New creates a new File.
+func New(file string) (*File, error) {
 	// open file
 	f, err := os.Open(file)
 	if err != nil {
@@ -42,7 +46,7 @@ func Split(file string) (*File, error) {
 
 	// files larger than fileMaxSize should be rejected
 	if fileSize > fileMaxSize {
-		return nil, fmt.Errorf("sorry, we don't process files larger than %v bytes", fileMaxSize)
+		return nil, errMaxSize
 	}
 
 	// calculate total number of parts the file will be chunked into
@@ -72,4 +76,20 @@ func Split(file string) (*File, error) {
 	}
 
 	return &File{Name: file, Index: strings.Join(index, " "), Chunks: chunks}, nil
+}
+
+// Save saves the file with the given content.
+func Save(file string, content []byte) error {
+	f, err := os.Create(file)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = f.Write(content)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
