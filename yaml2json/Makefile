@@ -6,7 +6,9 @@ sh:
 	docker build -t yaml2json .
 	docker run -it --rm -v ./:/app yaml2json sh
 
+version=$(shell git describe --all --dirty --long | awk -F"-|/" '/^heads/ {print $$2 "-" substr($$4, 2) "-" $$5}; /^tags/ { print $$2 }')
 build_args=-ldflags "-X main.versionString=$(version)" ./cmd/yaml2json
+files=$(shell find cmd -type f)
 
 build: build-linux build-darwin
 
