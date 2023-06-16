@@ -46,3 +46,13 @@ func TestGetFile(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestDeleteFile(t *testing.T) {
+	// initializes memcache client
+	client := &mockClient{}
+
+	// delete file
+	if err := DeleteFile(client, "file.txt"); err != nil {
+		t.Error(err)
+	}
+}

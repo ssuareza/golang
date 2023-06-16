@@ -30,6 +30,8 @@ func NewClient(server string) (Client, error) {
 func SetFile(c Client, f *file.File) error {
 	// set index
 	index := fmt.Sprint(f.Index)
+	fmt.Println(f.Name)
+	fmt.Println(f.Index)
 	if err := c.Set(&memcache.Item{Key: f.Name, Value: []byte(index)}); err != nil {
 		return err
 	}
@@ -66,27 +68,27 @@ func GetFile(c Client, file string) ([]byte, error) {
 	return fileBytes, nil
 }
 
-// // Delete deletes the file from memcached.
-// func (c *Client) Delete(file string) error {
-// 	// get index
-// 	i, err := c.db.Get(file)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	index := strings.Split(string(i.Value), " ")
+// Delete deletes the file from memcached.
+func DeleteFile(c Client, file string) error {
+	// get index
+	i, err := c.Get(file)
+	if err != nil {
+		return err
+	}
+	index := strings.Split(string(i.Value), " ")
 
-// 	// delete chunks from index
-// 	for _, chunk := range index {
-// 		err := c.db.Delete(chunk)
-// 		if err != nil {
-// 			return err
-// 		}
-// 	}
+	// delete chunks from index
+	for _, chunk := range index {
+		err := c.Delete(chunk)
+		if err != nil {
+			return err
+		}
+	}
 
-// 	// delete index
-// 	if err := c.db.Delete(file); err != nil {
-// 		return err
-// 	}
+	// delete index
+	if err := c.Delete(file); err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	return nil
+}

@@ -65,11 +65,11 @@ func main() {
 			log.Fatal(err)
 		}
 	case "delete":
-		// if err := cache.Delete(os.Args[2]); err != nil {
-		// 	log.Fatal(err)
-		// }
+		if err := memcache.DeleteFile(client, os.Args[2]); err != nil {
+			log.Fatal(err)
+		}
 
-		// fmt.Println("DELETED")
+		fmt.Println("DELETED")
 	default:
 		help()
 	}
