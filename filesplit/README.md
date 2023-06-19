@@ -7,30 +7,27 @@ A cli to split and save a file into Memcached.
 ### Start
 
 ```bash
-make start
+make build
+build/filesplit
 ```
 
 ### Set file
 
 ```bash
-docker compose exec filesplit go run cmd/filesplit/main.go set file.txt
+filesplit set file.txt
 ```
 
 ### Get file
 
 ```bash
-docker compose exec filesplit go run cmd/filesplit/main.go get file.txt
+filesplit get file.txt
 ```
 
 ### Delete file
 
 ```bash
-docker compose exec filesplit go run cmd/filesplit/main.go delete file.txt
+filesplit delete file.txt
 ```
-
-## Dependencies
-
-- Docker
 
 ## Useful commands
 
