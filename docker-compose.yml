@@ -60,9 +60,19 @@ services:
     ports:
         - "11211:11211"
 
+  yaml2json:
+    <<: *common
+    build:
+      context: ./
+      dockerfile: yaml2json/Dockerfile
+    volumes:
+      - ./yaml2json:/app
+      - yaml2json:/go/pkg/mod
+
 volumes:
   api:
   cobra:
   filesplit:
   gssh:
   memcached:
+  yaml2json:
