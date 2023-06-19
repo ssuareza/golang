@@ -60,6 +60,15 @@ services:
     ports:
         - "11211:11211"
 
+  tmdb:
+    <<: *common
+    build:
+      context: ./
+      dockerfile: tmdb/Dockerfile
+    volumes:
+      - ./tmdb:/app
+      - tmdb:/go/pkg/mod
+
   yaml2json:
     <<: *common
     build:
@@ -75,4 +84,5 @@ volumes:
   filesplit:
   gssh:
   memcached:
+  tmdb:
   yaml2json:
