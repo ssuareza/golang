@@ -5,10 +5,6 @@ A basic cli using cobra.
 ## Usage
 
 ```bash
-make start
-go run cmd/cobra/main.go
+make build
+build/cobra
 ```
-
-## Dependencies
-
-- Docker

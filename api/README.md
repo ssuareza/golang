@@ -10,12 +10,9 @@ It includes:
 ## Usage
 
 ```bash
-make start
+make build
+build/api
 ```
-
-## Dependencies
-
-- Docker
 
 ## Endpoints
 

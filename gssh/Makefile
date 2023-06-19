@@ -1,31 +1,23 @@
-ifeq ($(shell uname -s), Darwin)
-    shasum=shasum -a256
-else
-    shasum=sha256sum
-endif
-
-repo=github.com/ssuareza/gssh
+app=gssh
 version=$(shell git describe --all --dirty --long | awk -F"-|/" '/^heads/ {print $$2 "-" substr($$4, 2) "-" $$5}; /^tags/ { print $$2 }')
-build_args=-ldflags "-X main.versionString=$(version)" ./cmd/gssh
+build_args=-ldflags "-X main.versionString=$(version)" ./cmd/$(app)
 files=$(shell find cmd -type f)
 
-.PHONY: test
+dev:
+	docker build -t $(app) .
+	docker run -it --rm -v ./:/app $(app)
 
-all: test build checksums
+sh:
+	docker build -t $(app) .
+	docker run -it --rm -v ./:/app $(app) sh
 
 build: build-linux build-darwin
 
-build-linux: build/gssh-$(version)-linux-amd64
+build-linux: build/$(app)-$(version)-linux-amd64
 
-build/gssh-$(version)-linux-amd64: ${files}
+build/$(app)-$(version)-linux-amd64: ${files}
 	GOARCH=amd64 GOOS=linux go build -o $@ $(build_args)
 
-build-darwin: build/gssh-$(version)-darwin-amd64
-build/gssh-$(version)-darwin-amd64: ${files}
+build-darwin: build/$(app)-$(version)-darwin-amd64
+build/$(app)-$(version)-darwin-amd64: ${files}
 	GOARCH=amd64 GOOS=darwin go build -o $@ $(build_args)
-
-checksums: build
-	cd build/ && ${shasum} * > $(version)-SHA256SUMS
-
-test:
-	@go test -v pkg/gssh/*

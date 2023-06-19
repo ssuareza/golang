@@ -1,0 +1,68 @@
+---
+version: "3.7"
+
+x-common: &common
+  tty: true
+  stdin_open: true
+
+services:
+  api:
+    <<: *common
+    build:
+      context: ./
+      dockerfile: api/Dockerfile
+    volumes:
+      - ./api:/app
+      - api:/go/pkg/mod
+    env_file:
+      - api/env.dev
+
+  cobra:
+    <<: *common
+    build:
+      context: ./
+      dockerfile: cobra/Dockerfile
+    volumes:
+      - ./cobra:/app
+      - cobra:/go/pkg/mod
+
+  filesplit:
+    <<: *common
+    build:
+      context: ./
+      dockerfile: filesplit/Dockerfile
+    volumes:
+      - ./filesplit:/app
+      - filesplit:/go/pkg/mod
+    env_file:
+      - filesplit/env.dev
+    depends_on:
+      - memcached
+
+  gssh:
+    <<: *common
+    build:
+      context: ./
+      dockerfile: gssh/Dockerfile
+    volumes:
+      - ./gssh:/app
+      - gssh:/go/pkg/mod
+
+  memcached:
+    <<: *common
+    image: memcached:latest
+    container_name: memcached
+    # command: ["-m", "1000"] 
+    environment:
+      - MEMCACHED_MEMORY_LIMIT=1000m
+    volumes:
+      - memcached:/data
+    ports:
+        - "11211:11211"
+
+volumes:
+  api:
+  cobra:
+  filesplit:
+  gssh:
+  memcached:
