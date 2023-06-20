@@ -6,10 +6,13 @@ import (
 	"os"
 	"strings"
 
+	"gssh/pkg/aws"
+	"gssh/pkg/config"
+	"gssh/pkg/ssh"
+
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/fatih/color"
 	"github.com/gosuri/uitable"
-	"github.com/ssuareza/gssh/pkg/gssh"
 )
 
 func main() {
@@ -20,28 +23,28 @@ func main() {
 	}
 
 	// get config
-	c, err := gssh.GetConfig()
+	config, err := config.Get()
 	if err != nil {
 		log.Panic(err)
 	}
 
 	// get instances
-	profiles := strings.Split(c.AWS.Profile, ",")
+	profiles := strings.Split(config.AWS.Profile, ",")
 	var instances []*ec2.DescribeInstancesOutput
 	for k := range profiles {
-		svc, err := gssh.NewService(profiles[k], c.AWS.Region)
+		svc, err := aws.NewService(profiles[k], config.AWS.Region)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		list, err := gssh.Get(svc, filter)
+		list, err := aws.Get(svc, filter)
 		if err != nil {
 			log.Fatal(err)
 		}
 		instances = append(instances, list)
 	}
 
-	i := gssh.Metadata(instances)
+	i := aws.Metadata(instances)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -66,20 +69,20 @@ func main() {
 
 	// get ip
 	iptype := "private"
-	if len(c.SSH.Bastion) == 0 {
+	if len(config.SSH.Bastion) == 0 {
 		iptype = "public"
 	}
 
-	ip, err := (gssh.GetIP(instanceID, i, iptype))
+	ip, err := (aws.GetIP(instanceID, i, iptype))
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// and connect
-	gssh.Shell(ip, c)
+	ssh.Shell(ip, config)
 }
 
-func printTable(i []gssh.Server) {
+func printTable(i []aws.Server) {
 	table := uitable.New()
 	table.MaxColWidth = 50
 	table.AddRow(color.YellowString("InstanceID"), color.YellowString("Name"), color.YellowString("PrivateIP"), color.YellowString("PublicIP"))

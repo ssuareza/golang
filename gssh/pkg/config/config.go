@@ -1,4 +1,4 @@
-package gssh
+package config
 
 import (
 	"os"
@@ -25,8 +25,8 @@ type Config struct {
 	SSH *SSH
 }
 
-// GetConfig reads gssh configuration
-func GetConfig() (*Config, error) {
+// Get reads gssh configuration
+func Get() (*Config, error) {
 	path := os.Getenv("HOME") + "/.gssh"
 	viper.SetConfigName("config")
 	viper.AddConfigPath(path)

@@ -1,7 +1,8 @@
-package gssh
+package ssh
 
 import (
 	"fmt"
+	"gssh/pkg/config"
 	"io/ioutil"
 	"log"
 	"os"
@@ -63,7 +64,7 @@ func Proxy(bastion *ssh.Client, host string, clientCfg *ssh.ClientConfig) (*ssh.
 }
 
 // Shell opens a terminal in destination
-func Shell(host string, c *Config) error {
+func Shell(host string, c *config.Config) error {
 	user := c.SSH.User
 	port := fmt.Sprint(c.SSH.Port)
 	bastion := c.SSH.Bastion

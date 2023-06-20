@@ -1,4 +1,4 @@
-package gssh
+package aws
 
 import (
 	"fmt"
