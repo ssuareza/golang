@@ -50,12 +50,15 @@ func main() {
 	}
 
 	var instanceID string
+	switch {
+	// no instances
+	case len(i) == 0:
+		fmt.Println("no instances found")
+		os.Exit(0)
 	// if there is only 1 instance
-	if len(i) == 1 {
+	case len(i) == 1:
 		instanceID = i[0].Values["instance-id"]
-	}
-	// or print list of instances
-	if len(i) > 1 {
+	default:
 		// filter
 		printTable(i)
 

@@ -64,13 +64,13 @@ func TestGet(t *testing.T) {
 	mockSvc := &mockEC2Client{}
 	output, err := Get(mockSvc, "tag")
 	if err != nil {
-		t.Errorf("Not able to get instances")
+		t.Errorf("not able to get instances")
 	}
 
 	expected := 2
 	instances := len(output.Reservations[0].Instances)
 	if instances != expected {
-		t.Errorf("Number of instances is %v and should be %v", instances, expected)
+		t.Errorf("number of instances is %v and should be %v", instances, expected)
 	}
 }
 
@@ -86,6 +86,6 @@ func TestMetadata(t *testing.T) {
 	expected := 2
 	filtered := len(Metadata(servers))
 	if filtered != expected {
-		t.Errorf("Number of instances is %v and should be %v", filtered, expected)
+		t.Errorf("number of instances is %v and should be %v", filtered, expected)
 	}
 }
