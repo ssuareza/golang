@@ -26,11 +26,11 @@ func TestGetIP(t *testing.T) {
 
 	ip, err := GetIP("i-0a541b4374af7d920", instances, "public")
 	if err != nil {
-		t.Error("Not able to get ip")
+		t.Error("not able to get ip")
 	}
 
 	expected := "52.204.253.208"
 	if ip != expected {
-		t.Errorf("IP is %s and should be %s", ip, expected)
+		t.Errorf("ip is %s and should be %s", ip, expected)
 	}
 }

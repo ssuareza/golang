@@ -8,6 +8,6 @@ func TestGetPublicKey(t *testing.T) {
 	file := "../../testdata/id_rsa"
 	_, err := GetPublicKey(file)
 	if err != nil {
-		t.Error("Not able to read public key file")
+		t.Error("not able to read public key file")
 	}
 }

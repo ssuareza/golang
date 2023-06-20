@@ -1,7 +1,11 @@
 package aws
 
 import (
-	"fmt"
+	"errors"
+)
+
+var (
+	errIPNotFound = errors.New("ip not found")
 )
 
 // GetIP returns instance IP to connect
@@ -16,5 +20,5 @@ func GetIP(id string, servers []Server, iptype string) (string, error) {
 			}
 		}
 	}
-	return "", fmt.Errorf("IP not found")
+	return "", errIPNotFound
 }
