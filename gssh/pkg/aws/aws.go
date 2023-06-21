@@ -59,22 +59,22 @@ func Get(svc ec2iface.EC2API, filter string) (*ec2.DescribeInstancesOutput, erro
 	return res, nil
 }
 
-// Server contains the server information (id, ip, etc.)
-type Server struct {
+// Instance represents an aws instance.
+type Instance struct {
 	Name   string
 	Values map[string]string
 }
 
-// ByName is used to sort Server by Name
-type ByName []Server
+// ByName is used to sort instance by name.
+type ByName []Instance
 
 func (a ByName) Len() int           { return len(a) }
 func (a ByName) Less(i, j int) bool { return a[i].Name < a[j].Name }
 func (a ByName) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 
-// Metadata gets only a few metadata fields
-func Metadata(i []*ec2.DescribeInstancesOutput) []Server {
-	instances := []Server{}
+// Metadata returns the instances with only a few metadata fields.
+func Metadata(i []*ec2.DescribeInstancesOutput) []Instance {
+	var instances []Instance
 
 	for _, list := range i {
 		for _, reservation := range list.Reservations {
@@ -90,7 +90,7 @@ func Metadata(i []*ec2.DescribeInstancesOutput) []Server {
 					record[fmt.Sprintf("tag:%s", *tag.Key)] = *tag.Value
 				}
 
-				instances = append(instances, Server{
+				instances = append(instances, Instance{
 					Name:   record["tag:Name"],
 					Values: record,
 				})

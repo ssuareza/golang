@@ -9,14 +9,14 @@ var (
 )
 
 // GetIP returns instance IP to connect
-func GetIP(id string, servers []Server, iptype string) (string, error) {
-	for _, s := range servers {
-		if s.Values["instance-id"] == id {
+func GetIP(id string, instances []Instance, iptype string) (string, error) {
+	for _, instance := range instances {
+		if instance.Values["instance-id"] == id {
 			switch iptype {
 			case "private":
-				return s.Values["private-ip"], nil
+				return instance.Values["private-ip"], nil
 			default:
-				return s.Values["public-ip"], nil
+				return instance.Values["public-ip"], nil
 			}
 		}
 	}

@@ -85,7 +85,7 @@ func main() {
 	ssh.Shell(ip, config)
 }
 
-func printTable(i []aws.Server) {
+func printTable(i []aws.Instance) {
 	table := uitable.New()
 	table.MaxColWidth = 50
 	table.AddRow(color.YellowString("InstanceID"), color.YellowString("Name"), color.YellowString("PrivateIP"), color.YellowString("PublicIP"))

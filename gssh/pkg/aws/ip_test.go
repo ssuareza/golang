@@ -5,9 +5,9 @@ import (
 )
 
 func TestGetIP(t *testing.T) {
-	instances := []Server{
+	instances := []Instance{
 		{
-			Name: "server1",
+			Name: "instance1",
 			Values: map[string]string{
 				"instance-id": "i-0a541b4374af7d920",
 				"private-ip":  "172.16.0.180",
@@ -15,7 +15,7 @@ func TestGetIP(t *testing.T) {
 			},
 		},
 		{
-			Name: "server2",
+			Name: "instance2",
 			Values: map[string]string{
 				"instance-id": "i-1a432b4374dc7d123",
 				"private-ip":  "172.16.0.181",
