@@ -1,7 +1,8 @@
 ---
 version: "3.7"
 
-x-common: &common
+x-common:
+  &common
   tty: true
   stdin_open: true
 
@@ -58,7 +59,7 @@ services:
     volumes:
       - memcached:/data
     ports:
-        - "11211:11211"
+      - "11211:11211"
 
   tmdb:
     <<: *common
@@ -78,6 +79,15 @@ services:
       - ./yaml2json:/app
       - yaml2json:/go/pkg/mod
 
+  kubecli:
+    <<: *common
+    build:
+      context: ./
+      dockerfile: kubecli/Dockerfile
+    volumes:
+      - ./kubecli:/app
+      - kubecli:/go/pkg/mod
+
 volumes:
   api:
   cobra:
@@ -86,3 +96,4 @@ volumes:
   memcached:
   tmdb:
   yaml2json:
+  kubecli:
