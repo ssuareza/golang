@@ -1,0 +1,15 @@
+@api_url=https://api.ing.com
+
+### Token
+GET {{api_url}}/oauth2/token
+grant_type=client_credentials&scope=greetings%3Aview
+
+
+### Account details
+GET {{api_url}}/v3/accounts
+
+### Transactions
+/v3/accounts/{account-id}/transactions
+
+### Balance
+ /v3/accounts/{account-id}/balances

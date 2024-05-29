@@ -1,0 +1,43 @@
+@api_token=dafe4c79-2163-4ea8-b019-6c22625ad635
+@sandbox_api_url=https://api.sandbox.transferwise.tech
+
+@production_api_url=https://api.wise.com
+@profileId=16853014
+@cardToken=7646e26d-34ca-4028-a561-4a21da20bca1
+@since=2024-05-01T00:00:00.000Z
+@until=2024-05-28T00:00:00.000Z
+
+### Get profiles
+GET {{production_api_url}}/v2/profiles
+Authorization: Bearer {{api_token}}
+Content-Type: application/json
+
+### Addresses
+GET {{production_api_url}}/v1/addresses
+Authorization: Bearer {{api_token}}
+Content-Type: application/json
+
+### Balance
+GET {{production_api_url}}/v4/profiles/{{profileId}}/balances?types=STANDARD
+Authorization: Bearer {{api_token}}
+Content-Type: application/json
+
+### Card transactions
+GET {{production_api_url}}/v1/profiles/{{profileId}}/activities?type=CARD_PAYMENT&status=COMPLETED
+Authorization: Bearer {{api_token}}
+Content-Type: application/json
+
+### Card transactions with time range
+GET {{production_api_url}}/v1/profiles/{{profileId}}/activities?type=CARD_PAYMENT&status=COMPLETED&until={{until}}&since={{since}}&size=100
+Authorization: Bearer {{api_token}}
+Content-Type: application/json
+
+### Last transactions
+GET {{production_api_url}}/v1/profiles/{{profileId}}/activities
+Authorization: Bearer {{api_token}}
+Content-Type: application/json
+
+### Rate USD to EUR
+GET {{production_api_url}}/v1/rates?source=USD&target=EUR
+Authorization: Bearer {{api_token}}
+Content-Type: application/json
