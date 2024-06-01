@@ -14,7 +14,7 @@ import (
 var label *string
 
 func init() {
-	label = flag.String("label", "", "label to search	")
+	label = flag.String("label", "", "label to search")
 }
 
 func main() {
