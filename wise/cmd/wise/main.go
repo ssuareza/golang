@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"time"
 
@@ -11,13 +12,34 @@ import (
 	"github.com/ssuareza/golang/wise/pkg/wise"
 )
 
-var label *string
+var (
+	label   *string
+	verbose *bool
+)
 
 func init() {
 	label = flag.String("label", "", "label to search")
+	verbose = flag.Bool("verbose", false, "print transactions")
+
+	if flag.Arg(0) == "help" {
+		usage()
+		os.Exit(0)
+	}
+}
+
+// usage prints the usage of the program
+func usage() {
+	fmt.Println(`Usage: wise [options]
+
+Options:
+  -label=LABEL  label to search
+  -verbose      print transactions
+  -help         display this help and exit`)
 }
 
 func main() {
+	flag.Parse()
+
 	// get config
 	config, err := config.New()
 	if err != nil {
@@ -65,7 +87,6 @@ func main() {
 		}
 
 		// filter transactions
-		flag.Parse()
 		if len(*label) != 0 {
 			transactions = client.FilterTransactionsByLabel(transactions, *label)
 		}
@@ -88,6 +109,20 @@ func main() {
 
 		// output
 		fmt.Printf("- %s: %.2f EUR (%s)\n", date.Format("2006-01"), sumTransactions, maxTransactionParsed)
+		if *verbose {
+			for _, transaction := range transactions.Activities {
+				// process only payments completed
+				if transaction.Type != "CARD_PAYMENT" {
+					continue
+				}
+
+				var title string
+				title = strings.Replace(transaction.Title, "<strong>", "", -1)
+				title = strings.Replace(title, "</strong>", "", -1)
+				date, _ := time.Parse(time.RFC3339, transaction.Date)
+				fmt.Printf("  - %s: %s %s\n", date.Format(layout), title, transaction.Amount)
+			}
+		}
 	}
 }
 
