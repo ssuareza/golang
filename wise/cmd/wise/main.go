@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"strings"
@@ -9,6 +10,12 @@ import (
 	"github.com/ssuareza/golang/wise/pkg/config"
 	"github.com/ssuareza/golang/wise/pkg/wise"
 )
+
+var label *string
+
+func init() {
+	label = flag.String("label", "", "label to search	")
+}
 
 func main() {
 	// get config
@@ -41,7 +48,6 @@ func main() {
 	fmt.Printf("\n> Card transactions\n")
 
 	// get transactions
-
 	date := time.Now()
 
 	// loop 6 months
@@ -52,9 +58,16 @@ func main() {
 		since := BeginningOfMonth(date).Format(layout) + "T00:00:00.000Z"
 		until := EndOfMonth(date).Format(layout) + "T23:59:00.000Z"
 
+		// get transactions
 		transactions, err := client.GetTransactionsByRange(until, since)
 		if err != nil {
 			log.Fatal(err)
+		}
+
+		// filter transactions
+		flag.Parse()
+		if len(*label) != 0 {
+			transactions = client.FilterTransactionsByLabel(transactions, *label)
 		}
 
 		// don't process transactions if is empty

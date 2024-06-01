@@ -192,3 +192,16 @@ func (c *Client) GetMaxTransaction(transactions Transactions) Transaction {
 
 	return max
 }
+
+// FilterTransactions filters the transactions by label
+func (c *Client) FilterTransactionsByLabel(transactions Transactions, label string) Transactions {
+	var filtered Transactions
+
+	for _, activity := range transactions.Activities {
+		if strings.Contains(activity.Title, label) {
+			filtered.Activities = append(filtered.Activities, activity)
+		}
+	}
+
+	return filtered
+}
