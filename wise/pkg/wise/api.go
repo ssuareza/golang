@@ -29,10 +29,11 @@ type Rates []Rate
 // Transaction represents a transaction
 type Transaction struct {
 	ID     string `json:"id"`
-	Type   string `json:"type"`
-	Title  string `json:"title"`
-	Status string `json:"status"`
 	Amount string `json:"primaryAmount"`
+	Date   string `json:"createdOn"`
+	Status string `json:"status"`
+	Title  string `json:"title"`
+	Type   string `json:"type"`
 }
 
 // Transactions represents a slice of Transaction
