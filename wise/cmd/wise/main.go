@@ -120,7 +120,7 @@ func main() {
 				title = strings.Replace(transaction.Title, "<strong>", "", -1)
 				title = strings.Replace(title, "</strong>", "", -1)
 				date, _ := time.Parse(time.RFC3339, transaction.Date)
-				fmt.Printf("  - %s: %s %s\n", date.Format(layout), title, transaction.Amount)
+				fmt.Printf("-- %s: %s %s\n", date.Format(layout), title, transaction.Amount)
 			}
 		}
 	}
