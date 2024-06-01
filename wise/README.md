@@ -38,3 +38,9 @@ build/wise
 - 2024-01: 150.99 EUR (Market 117.74 EUR)
 - 2023-12: 166.51 EUR (Amazon 156.37 EUR)
 ```
+
+You can also filter by "label":
+
+```sh
+build/wise --label bike
+```

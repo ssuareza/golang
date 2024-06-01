@@ -104,24 +104,24 @@ func (c *Client) GetRate(source, target string) (float64, error) {
 	return rates[0].Rate, nil
 }
 
-// GetCardTransactionsByRange retrieves the transactions by range
-func (c *Client) GetCardTransactionsByRange(until, since string) (CardTransactions, error) {
+// GetTransactionsByRange retrieves the transactions by range
+func (c *Client) GetTransactionsByRange(until, since string) (Transactions, error) {
 	// set url
-	cardTransactionsURL := fmt.Sprintf("%s%s%s%s%s%s%s%s", c.ApiEndpoint, "/v1/profiles/", c.ProfileID, "/activities?status=COMPLETED&until=", until, "&since=", since, "&size=100")
+	transactionsURL := fmt.Sprintf("%s%s%s%s%s%s%s%s", c.ApiEndpoint, "/v1/profiles/", c.ProfileID, "/activities?status=COMPLETED&until=", until, "&since=", since, "&size=100")
 
 	// new request
-	req, _ := http.NewRequest(http.MethodGet, cardTransactionsURL, nil)
+	req, _ := http.NewRequest(http.MethodGet, transactionsURL, nil)
 	req.Header.Add("Authorization", "Bearer "+c.ApiKey)
 
 	// make request
 	res, err := c.Client.Do(req)
 	if err != nil {
-		return CardTransactions{}, err
+		return Transactions{}, err
 	}
 
 	// check status code
 	if res.StatusCode != http.StatusOK {
-		return CardTransactions{}, errInvalidCredentials
+		return Transactions{}, errInvalidCredentials
 	}
 
 	// get body
@@ -129,20 +129,20 @@ func (c *Client) GetCardTransactionsByRange(until, since string) (CardTransactio
 	body, err := io.ReadAll(res.Body)
 
 	// marshal json
-	var cardTransactions CardTransactions
-	if err := json.Unmarshal(body, &cardTransactions); err != nil {
-		return cardTransactions, err
+	var Transactions Transactions
+	if err := json.Unmarshal(body, &Transactions); err != nil {
+		return Transactions, err
 	}
 
-	return cardTransactions, nil
+	return Transactions, nil
 }
 
-// SumCardTransactions sums the card transactions
-func (c *Client) SumCardTransactions(cardTransactions CardTransactions) float64 {
+// SumTransactions sums the transactions
+func (c *Client) SumTransactions(Transactions Transactions) float64 {
 	var sum float64
 
 	// loop activities
-	for _, activity := range cardTransactions.Activities {
+	for _, activity := range Transactions.Activities {
 		// process only card payments completed
 		if activity.Type != "CARD_PAYMENT" {
 			continue
@@ -156,13 +156,13 @@ func (c *Client) SumCardTransactions(cardTransactions CardTransactions) float64 
 	return sum
 }
 
-// GetMaxCardTransaction retrieves the max card transaction
-func (c *Client) GetMaxCardTransaction(cardTransactions CardTransactions) CardTransaction {
-	var max CardTransaction
+// GetMaxTransaction retrieves the max transaction
+func (c *Client) GetMaxTransaction(transactions Transactions) Transaction {
+	var max Transaction
 
 	// loop activities
-	for i, activity := range cardTransactions.Activities {
-		// process only card payments completed
+	for i, activity := range transactions.Activities {
+		// process only payments completed
 		if activity.Type != "CARD_PAYMENT" {
 			continue
 		}
@@ -191,4 +191,17 @@ func (c *Client) GetMaxCardTransaction(cardTransactions CardTransactions) CardTr
 	}
 
 	return max
+}
+
+// FilterTransactions filters the transactions by label
+func (c *Client) FilterTransactionsByLabel(transactions Transactions, label string) Transactions {
+	var filtered Transactions
+
+	for _, activity := range transactions.Activities {
+		if strings.Contains(activity.Title, label) {
+			filtered.Activities = append(filtered.Activities, activity)
+		}
+	}
+
+	return filtered
 }
