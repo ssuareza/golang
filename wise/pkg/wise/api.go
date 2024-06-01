@@ -26,8 +26,8 @@ type Rate struct {
 // Rates represents a slice of Rate
 type Rates []Rate
 
-// CardTransaction represents a card transaction
-type CardTransaction struct {
+// Transaction represents a transaction
+type Transaction struct {
 	ID     string `json:"id"`
 	Type   string `json:"type"`
 	Title  string `json:"title"`
@@ -35,7 +35,7 @@ type CardTransaction struct {
 	Amount string `json:"primaryAmount"`
 }
 
-// CardTransactions represents a slice of CardTransaction
-type CardTransactions struct {
-	Activities []CardTransaction `json:"activities"`
+// Transactions represents a slice of Transaction
+type Transactions struct {
+	Activities []Transaction `json:"activities"`
 }

@@ -52,23 +52,29 @@ func main() {
 		since := BeginningOfMonth(date).Format(layout) + "T00:00:00.000Z"
 		until := EndOfMonth(date).Format(layout) + "T23:59:00.000Z"
 
-		cardTransactions, err := client.GetCardTransactionsByRange(until, since)
+		transactions, err := client.GetTransactionsByRange(until, since)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		// sum transactions
-		sumCardTransactions := client.SumCardTransactions(cardTransactions)
+		// don't process transactions if is empty
+		if len(transactions.Activities) == 0 {
+			fmt.Printf("- %s: 0.0 EUR\n", date.Format("2006-01"))
+			continue
+		}
 
-		// get max card transaction
-		maxCardTransaction := client.GetMaxCardTransaction(cardTransactions)
-		var maxCardTransactionTitle string
-		maxCardTransactionTitle = strings.Replace(maxCardTransaction.Title, "<strong>", "", -1)
-		maxCardTransactionTitle = strings.Replace(maxCardTransactionTitle, "</strong>", "", -1)
-		maxCardTransactionParsed := fmt.Sprintf("%s %s", maxCardTransactionTitle, maxCardTransaction.Amount)
+		// sum transactions
+		sumTransactions := client.SumTransactions(transactions)
+
+		// get max transaction
+		maxTransaction := client.GetMaxTransaction(transactions)
+		var maxTransactionTitle string
+		maxTransactionTitle = strings.Replace(maxTransaction.Title, "<strong>", "", -1)
+		maxTransactionTitle = strings.Replace(maxTransactionTitle, "</strong>", "", -1)
+		maxTransactionParsed := fmt.Sprintf("%s %s", maxTransactionTitle, maxTransaction.Amount)
 
 		// output
-		fmt.Printf("- %s: %.2f EUR (%s)\n", date.Format("2006-01"), sumCardTransactions, maxCardTransactionParsed)
+		fmt.Printf("- %s: %.2f EUR (%s)\n", date.Format("2006-01"), sumTransactions, maxTransactionParsed)
 	}
 }
 
