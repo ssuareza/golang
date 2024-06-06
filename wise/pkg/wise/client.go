@@ -159,22 +159,16 @@ func (c *Client) SumTransactions(Transactions Transactions) float64 {
 // GetMaxTransaction retrieves the max transaction
 func (c *Client) GetMaxTransaction(transactions Transactions) Transaction {
 	var max Transaction
-
 	// loop activities
-	for i, activity := range transactions.Activities {
+	for _, activity := range transactions.Activities {
 		// process only payments completed
 		if activity.Type != "CARD_PAYMENT" {
 			continue
 		}
 
 		// check if is the first value
-		if i == 0 {
+		if len(max.Amount) == 0 {
 			max = activity
-			continue
-		}
-
-		// ignore positive entries
-		if strings.Contains(activity.Amount, "+") {
 			continue
 		}
 
