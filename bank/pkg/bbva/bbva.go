@@ -48,12 +48,6 @@ func (b *BBVA) Process() error {
 		return err
 	}
 
-	// // order rows
-	// ordered, err := b.order(filtered)
-	// if err != nil {
-	// 	return err
-	// }
-
 	// create csv
 	if err := csv.New("bbva", filtered); err != nil {
 		return err
@@ -120,13 +114,4 @@ func (b *BBVA) filter(rows [][]string, filter string) (csv.Rows, error) {
 	}
 
 	return filteredRows, nil
-}
-
-// order returns the ordered rows.
-func (b *BBVA) order(rows csv.Rows) (csv.Rows, error) {
-	for i, j := 0, len(rows)-1; i < j; i, j = i+1, j-1 {
-		rows[i], rows[j] = rows[j], rows[i] //reverse the slice
-	}
-
-	return rows, nil
 }
