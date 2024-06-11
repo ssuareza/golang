@@ -30,21 +30,21 @@ func New(file, sheet, month string) (*ING, error) {
 }
 
 // Process processes the file.
-func (b *ING) Process() error {
+func (i *ING) Process() error {
 	// get file
-	f, err := b.getFile()
+	f, err := i.getFile()
 	if err != nil {
 		return err
 	}
 
 	// get rows
-	rows, err := b.getRows(f)
+	rows, err := i.getRows(f)
 	if err != nil {
 		return err
 	}
 
 	// filter rows
-	filtered, err := b.filter(rows, b.month)
+	filtered, err := i.filter(rows, i.month)
 	if err != nil {
 		return err
 	}
@@ -58,9 +58,9 @@ func (b *ING) Process() error {
 }
 
 // getFile returns the file.
-func (b *ING) getFile() (*excelize.File, error) {
+func (i *ING) getFile() (*excelize.File, error) {
 	// open file
-	f, err := excelize.OpenFile(b.file)
+	f, err := excelize.OpenFile(i.file)
 	if err != nil {
 		return nil, err
 	}
@@ -75,8 +75,8 @@ func (b *ING) getFile() (*excelize.File, error) {
 }
 
 // getRows returns the rows.
-func (b *ING) getRows(file *excelize.File) ([][]string, error) {
-	rows, err := file.GetRows(b.sheet)
+func (i *ING) getRows(file *excelize.File) ([][]string, error) {
+	rows, err := file.GetRows(i.sheet)
 	if err != nil {
 		return nil, errRows
 	}
@@ -85,7 +85,7 @@ func (b *ING) getRows(file *excelize.File) ([][]string, error) {
 }
 
 // filter returns the filtered rows.
-func (b *ING) filter(rows [][]string, filter string) (csv.Rows, error) {
+func (i *ING) filter(rows [][]string, filter string) (csv.Rows, error) {
 	var filteredRows csv.Rows
 
 	// loop through rows
