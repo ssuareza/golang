@@ -7,10 +7,12 @@ import (
 	"os"
 
 	"github.com/ssuareza/golang/bank/pkg/bbva"
+	"github.com/ssuareza/golang/bank/pkg/ing"
 )
 
 const (
 	bbvaSheet = "Informe BBVA"
+	ingSheet  = "Movimientos"
 )
 
 var (
@@ -34,21 +36,21 @@ func init() {
 
 // usage prints the usage of the program
 func usage() {
-	fmt.Println(`Usage: bank --name=<name> --file=<file> --month=<month>
+	fmt.Println(`Usage: bank --name=<bbva|ing> --file=<file> --month=<month>
 
 Options:
 
-  -name=name    name of the bank
-  -file=file    file to process
-  -month=month    month to search
-  -help         display this help and exit`)
+  -name=<bbva|ing>   name of the bank
+  -file=file         file to process
+  -month=month       month to search
+  -help              display this help and exit`)
 }
 
 func main() {
 	// check params
 	if *name == "" || *file == "" || *month == "" {
 		usage()
-		os.Exit(1)
+		os.Exit(0)
 	}
 
 	// process by name
@@ -60,6 +62,16 @@ func main() {
 		}
 
 		if err := bank.Process(); err != nil {
+			log.Fatal(err)
+		}
+
+	case "ing":
+		ing, err := ing.New(*file, ingSheet, *month)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if err := ing.Process(); err != nil {
 			log.Fatal(err)
 		}
 

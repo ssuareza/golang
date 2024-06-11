@@ -1,4 +1,4 @@
-package bbva
+package ing
 
 import (
 	"errors"
@@ -17,20 +17,20 @@ var (
 	errRows = errors.New("error getting rows")
 )
 
-// BBVA
-type BBVA struct {
+// ING
+type ING struct {
 	file  string
 	sheet string
 	month string
 }
 
-// New creates a new BBVA instance.
-func New(file, sheet, month string) (*BBVA, error) {
-	return &BBVA{file: file, sheet: sheet, month: month}, nil
+// New creates a new ING instance.
+func New(file, sheet, month string) (*ING, error) {
+	return &ING{file: file, sheet: sheet, month: month}, nil
 }
 
 // Process processes the file.
-func (b *BBVA) Process() error {
+func (b *ING) Process() error {
 	// get file
 	f, err := b.getFile()
 	if err != nil {
@@ -50,7 +50,7 @@ func (b *BBVA) Process() error {
 	}
 
 	// create csv
-	if err := csv.New("bbva", filtered); err != nil {
+	if err := csv.New("ing", filtered); err != nil {
 		return err
 	}
 
@@ -58,7 +58,7 @@ func (b *BBVA) Process() error {
 }
 
 // getFile returns the file.
-func (b *BBVA) getFile() (*excelize.File, error) {
+func (b *ING) getFile() (*excelize.File, error) {
 	// open file
 	f, err := excelize.OpenFile(b.file)
 	if err != nil {
@@ -75,7 +75,7 @@ func (b *BBVA) getFile() (*excelize.File, error) {
 }
 
 // getRows returns the rows.
-func (b *BBVA) getRows(file *excelize.File) ([][]string, error) {
+func (b *ING) getRows(file *excelize.File) ([][]string, error) {
 	rows, err := file.GetRows(b.sheet)
 	if err != nil {
 		return nil, errRows
@@ -85,7 +85,7 @@ func (b *BBVA) getRows(file *excelize.File) ([][]string, error) {
 }
 
 // filter returns the filtered rows.
-func (b *BBVA) filter(rows [][]string, filter string) (csv.Rows, error) {
+func (b *ING) filter(rows [][]string, filter string) (csv.Rows, error) {
 	var filteredRows csv.Rows
 
 	// loop through rows
@@ -100,10 +100,10 @@ func (b *BBVA) filter(rows [][]string, filter string) (csv.Rows, error) {
 			// filter by month
 			if strings.Contains(cell, fmt.Sprintf("/%s/", filter)) {
 				// set date
-				date, _ := time.Parse("02/01/2006", row[1])
+				date, _ := time.Parse("02/01/2006", row[0])
 
 				// set amount
-				amount := strings.Replace(row[5], ".", decimalSeparator, -1)
+				amount := strings.Replace(row[6], ".", decimalSeparator, -1)
 
 				// set description
 				filteredRow := csv.Row{

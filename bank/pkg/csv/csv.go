@@ -2,11 +2,18 @@ package csv
 
 import (
 	"encoding/csv"
+	"errors"
 	"fmt"
 	"os"
-	"strings"
 	"time"
 )
+
+const (
+	size      = 6   // size is the number of lines expected by day
+	delimiter = ';' // delimiter is the csv separator
+)
+
+var errNoRows = errors.New("no rows found")
 
 // Row represents a row in the file.
 type Row struct {
@@ -22,7 +29,7 @@ type Rows []Row
 func New(name string, rows Rows) error {
 	// ignore empty rows
 	if len(rows) == 0 {
-		return fmt.Errorf("no rows provided")
+		return errNoRows
 	}
 
 	// set file
@@ -44,28 +51,25 @@ func New(name string, rows Rows) error {
 	w := csv.NewWriter(f)
 
 	// set csv separator
-	w.Comma = ';'
+	w.Comma = delimiter
 
 	// write rows
 	// loop the whole month
 	for i := 1; i <= EndOfMonth(rows[len(rows)-1].Date).Day(); i++ {
 		// set size
-		size := 6
+		s := size
 
 		// write row
 		for _, row := range rows {
 			if row.Date.Day() == i {
-				// set decimal separator to comma
-				row.Amount = strings.Replace(row.Amount, ".", ",", -1)
 				w.Write([]string{row.Description, row.Amount})
-				size--
+				s--
 			}
 		}
 
 		// write empty lines
-		if size != 0 {
-			for i := 0; i < size; i++ {
-				fmt.Printf(";;\n")
+		if s != 0 {
+			for i := 0; i < s; i++ {
 				w.Write([]string{"", ""})
 			}
 		}
