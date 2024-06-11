@@ -1,4 +1,4 @@
-package bbva
+package ing
 
 import (
 	"errors"
@@ -17,40 +17,40 @@ var (
 	errRows = errors.New("error getting rows")
 )
 
-// BBVA
-type BBVA struct {
+// ING
+type ING struct {
 	file  string
 	sheet string
 	month string
 }
 
-// New creates a new BBVA instance.
-func New(file, sheet, month string) (*BBVA, error) {
-	return &BBVA{file: file, sheet: sheet, month: month}, nil
+// New creates a new ING instance.
+func New(file, sheet, month string) (*ING, error) {
+	return &ING{file: file, sheet: sheet, month: month}, nil
 }
 
 // Process processes the file.
-func (b *BBVA) Process() error {
+func (i *ING) Process() error {
 	// get file
-	f, err := b.getFile()
+	f, err := i.getFile()
 	if err != nil {
 		return err
 	}
 
 	// get rows
-	rows, err := b.getRows(f)
+	rows, err := i.getRows(f)
 	if err != nil {
 		return err
 	}
 
 	// filter rows
-	filtered, err := b.filter(rows, b.month)
+	filtered, err := i.filter(rows, i.month)
 	if err != nil {
 		return err
 	}
 
 	// create csv
-	if err := csv.New("bbva", filtered); err != nil {
+	if err := csv.New("ing", filtered); err != nil {
 		return err
 	}
 
@@ -58,9 +58,9 @@ func (b *BBVA) Process() error {
 }
 
 // getFile returns the file.
-func (b *BBVA) getFile() (*excelize.File, error) {
+func (i *ING) getFile() (*excelize.File, error) {
 	// open file
-	f, err := excelize.OpenFile(b.file)
+	f, err := excelize.OpenFile(i.file)
 	if err != nil {
 		return nil, err
 	}
@@ -75,8 +75,8 @@ func (b *BBVA) getFile() (*excelize.File, error) {
 }
 
 // getRows returns the rows.
-func (b *BBVA) getRows(file *excelize.File) ([][]string, error) {
-	rows, err := file.GetRows(b.sheet)
+func (i *ING) getRows(file *excelize.File) ([][]string, error) {
+	rows, err := file.GetRows(i.sheet)
 	if err != nil {
 		return nil, errRows
 	}
@@ -85,7 +85,7 @@ func (b *BBVA) getRows(file *excelize.File) ([][]string, error) {
 }
 
 // filter returns the filtered rows.
-func (b *BBVA) filter(rows [][]string, filter string) (csv.Rows, error) {
+func (i *ING) filter(rows [][]string, filter string) (csv.Rows, error) {
 	var filteredRows csv.Rows
 
 	// loop through rows
@@ -100,10 +100,10 @@ func (b *BBVA) filter(rows [][]string, filter string) (csv.Rows, error) {
 			// filter by month
 			if strings.Contains(cell, fmt.Sprintf("/%s/", filter)) {
 				// set date
-				date, _ := time.Parse("02/01/2006", row[1])
+				date, _ := time.Parse("02/01/2006", row[0])
 
 				// set amount
-				amount := strings.Replace(row[5], ".", decimalSeparator, -1)
+				amount := strings.Replace(row[6], ".", decimalSeparator, -1)
 
 				// set description
 				filteredRow := csv.Row{
