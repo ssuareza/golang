@@ -43,8 +43,8 @@ func New(c config.Config) *Client {
 // Process processes the data.
 func (c *Client) Process(date time.Time) error {
 	// get transactions
-	since := BeginningOfMonth(date).Format(dateLayout) + "T00:00:00.000Z"
-	until := EndOfMonth(date).Format(dateLayout) + "T23:59:00.000Z"
+	since := csv.BeginningOfMonth(date).Format(dateLayout) + "T00:00:00.000Z"
+	until := csv.EndOfMonth(date).Format(dateLayout) + "T23:59:00.000Z"
 
 	t, err := c.getTransactions(until, since)
 	if err != nil {
@@ -98,16 +98,6 @@ func (c *Client) getTransactions(until, since string) (transactions, error) {
 	}
 
 	return t, nil
-}
-
-// BeginningOfMonth returns the fist day of the month.
-func BeginningOfMonth(date time.Time) time.Time {
-	return date.AddDate(0, 0, -date.Day()+1)
-}
-
-// EndOfMonth returns the last day of the month.
-func EndOfMonth(date time.Time) time.Time {
-	return date.AddDate(0, 1, -date.Day())
 }
 
 // filter filters the transactions.
