@@ -25,7 +25,11 @@ type BBVA struct {
 }
 
 // New creates a new BBVA instance.
-func New(file, sheet, month string) (*BBVA, error) {
+func New(file string, sheet string, date time.Time) (*BBVA, error) {
+	// get month
+	month := date.Format("01")
+
+	// create instance
 	return &BBVA{file: file, sheet: sheet, month: month}, nil
 }
 

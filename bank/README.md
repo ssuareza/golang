@@ -8,35 +8,35 @@ Every bank uses its format to export data. This application gets that data and c
 
 1. Build application:
 
-```sh
-make build
-```
+   ```sh
+   make build
+   ```
 
 2. And run:
 
+   ```sh
+   build/bank --name=bbva --file=data/bbva.xlsx --date=01/03/2024
+   CSV file created successfully on /tmp/bbva.csv
+   ```
+
+More examples:
+
 ```sh
-build/bank --name=bbva --file=data/bbva.xlsx --month=03
-CSV file created successfully on /tmp/bbva.csv
+build/bank --name=ing --file=data/ing.xlsx --date=01/05/2024
 ```
 
 ```sh
-cat /tmp/bbva.csv
+build/bank --name=wise --date=01/03/2024
+```
 
-Parking;0,66
-Parking;0,95
-Parking;-0,95
-Parking;-1,75
-Peaje;-3,05
-Parking;-2,4
-Nomina;1000
-Bizum;-200
-Parking;-0,55
-Escola;-129,71
-Luz;-77,44
-Online;-24,99
-Bizum;25
-Bizum;56
-Bizum;-11,3
-Telefono;-54,9
-Club;-84,4
+## Wise
+
+In the case of Wise the application gets the data from the Wise API, no need to use a spreadsheet.
+
+The only requirement is to create a configuration file on "$HOME/.config/bank/wise.yml":
+
+```yaml
+api_endpoint: https://api.wise.com
+api_key: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+profile_id: 12345678
 ```

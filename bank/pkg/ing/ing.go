@@ -25,7 +25,11 @@ type ING struct {
 }
 
 // New creates a new ING instance.
-func New(file, sheet, month string) (*ING, error) {
+func New(file string, sheet string, date time.Time) (*ING, error) {
+	// get month
+	month := date.Format("01")
+
+	// create instance
 	return &ING{file: file, sheet: sheet, month: month}, nil
 }
 
