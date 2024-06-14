@@ -9,9 +9,8 @@ import (
 
 // Config struct
 type Config struct {
-	ApiEndpoint string `yaml:"api_endpoint"`
-	ApiKey      string `yaml:"api_key"`
-	ProfileID   string `yaml:"profile_id"`
+	ApiKey    string `yaml:"api_key"`
+	ProfileID string `yaml:"profile_id"`
 }
 
 // getConfigFile returns the path to the config file

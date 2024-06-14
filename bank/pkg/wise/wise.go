@@ -14,8 +14,9 @@ import (
 )
 
 var (
-	errInvalidRequest = errors.New("invalid request")
 	dateLayout        = "2006-01-02"
+	errInvalidRequest = errors.New("invalid request")
+	wiseAPIEndpoint   = "https://api.wise.com"
 	wiseDateLayout    = "2006-01-02T15:04:05.000Z"
 )
 
@@ -31,7 +32,7 @@ type Client struct {
 // New creates a new client
 func New(c config.Config) *Client {
 	return &Client{
-		ApiEndpoint: c.ApiEndpoint,
+		ApiEndpoint: wiseAPIEndpoint,
 		ApiKey:      c.ApiKey,
 		ProfileID:   c.ProfileID,
 		Client: &http.Client{
