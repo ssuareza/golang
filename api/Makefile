@@ -5,7 +5,7 @@ files=$(shell find cmd -type f)
 
 dev:
 	docker build -t $(app) .
-	docker run -it --rm -v ./:/app $(app)
+	docker run -it --env-file=env.dev --rm -v ./:/app $(app)
 
 sh:
 	docker build -t $(app) .
