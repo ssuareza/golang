@@ -1,8 +1,0 @@
-@api_endpoint=https://api.wise.com/v1/profiles/16853014/activities?status=COMPLETED
-@api_key=dafe4c79-2163-4ea8-b019-6c22625ad635
-@profile_id=16853014
-
-## January 2025
-GET {{api_endpoint}}&until=2025-01-31T23:59:00.000Z&since=2025-01-01T00:00:00.000Z&size=100
-Content-Type: application/json
-Authorization: Bearer {{api_key}}
