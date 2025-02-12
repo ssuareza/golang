@@ -9,7 +9,6 @@ import (
 )
 
 const (
-	size      = 6   // size is the number of lines expected by day
 	delimiter = ';' // delimiter is the csv separator
 )
 
@@ -56,21 +55,10 @@ func New(name string, rows Rows) error {
 	// write rows
 	// loop the whole month
 	for i := 1; i <= EndOfMonth(rows[len(rows)-1].Date).Day(); i++ {
-		// set size
-		s := size
-
 		// write row
 		for _, row := range rows {
 			if row.Date.Day() == i {
-				w.Write([]string{row.Description, row.Amount})
-				s--
-			}
-		}
-
-		// write empty lines
-		if s != 0 {
-			for i := 0; i < s; i++ {
-				w.Write([]string{"", ""})
+				w.Write([]string{row.Date.Format("2006-01-02"), row.Description, row.Amount})
 			}
 		}
 	}

@@ -107,7 +107,7 @@ func (i *ING) filter(rows [][]string, filter string) (csv.Rows, error) {
 				date, _ := time.Parse("02/01/2006", row[0])
 
 				// set amount
-				amount := strings.Replace(row[6], ".", decimalSeparator, -1)
+				amount := strings.Replace(row[5], ".", decimalSeparator, -1)
 
 				// set description
 				filteredRow := csv.Row{
