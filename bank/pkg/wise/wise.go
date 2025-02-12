@@ -45,9 +45,7 @@ func New(c config.Config) *Client {
 func (c *Client) Process(date time.Time) error {
 	// get transactions
 	since := csv.BeginningOfMonth(date).Format(dateLayout) + "T00:00:00.000Z"
-	fmt.Println(since)
 	until := csv.EndOfMonth(date).Format(dateLayout) + "T23:59:00.000Z"
-	fmt.Println(until)
 
 	t, err := c.getTransactions(until, since)
 	if err != nil {
@@ -76,7 +74,6 @@ func (c *Client) getTransactions(until, since string) (transactions, error) {
 	// set url
 	url := fmt.Sprintf("%s%s%s%s%s%s%s%s", c.ApiEndpoint, "/v1/profiles/", c.ProfileID, "/activities?status=COMPLETED&until=", until, "&since=", since, "&size=100")
 
-	fmt.Println(url)
 	// new request
 	req, _ := http.NewRequest(http.MethodGet, url, nil)
 	req.Header.Add("Authorization", "Bearer "+c.ApiKey)
