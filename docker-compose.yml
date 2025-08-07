@@ -78,6 +78,15 @@ services:
       - ./yaml2json:/app
       - yaml2json:/go/pkg/mod
 
+  prom:
+    <<: *common
+    build:
+      context: ./
+      dockerfile: prom/Dockerfile
+    volumes:
+      - ./prom:/app
+      - prom:/go/pkg/mod
+
 volumes:
   api:
   cobra:
@@ -86,3 +95,4 @@ volumes:
   memcached:
   tmdb:
   yaml2json:
+  prom:
