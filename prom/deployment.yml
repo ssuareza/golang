@@ -28,13 +28,32 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: prom
   labels:
     app: prom
+    release: prometheus
+  name: prom
 spec:
   ports:
-    - port: 2112
-      targetPort: 2112
+    - name: "2112"
+      port: 2112
       protocol: TCP
+      targetPort: 2112
   selector:
     app: prom
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    release: prometheus
+  name: prom
+spec:
+  endpoints:
+    - interval: 5s
+      path: /metrics
+      port: "2112"
+      scrapeTimeout: 5s
+  selector:
+    matchLabels:
+      app: prom
+      release: prometheus

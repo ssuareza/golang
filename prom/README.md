@@ -29,22 +29,10 @@ This is assuming that you already have Prometheus running inside your kubernetes
 minikube start
 ```
 
-2. Set environment variables:
-
-```sh
-eval $(minikube docker-env)
-```
-
-3. Build the docker image:
-
-```sh
-docker build -t prom:latest -f Dockerfile.prod .
-```
-
 4. Deploy it!
 
 ```sh
-kubectl apply -f deployment.yml
+bin/deploy.sh
 ```
 
 5. Test it!
@@ -52,7 +40,7 @@ kubectl apply -f deployment.yml
 Make a few requests to the "ping" endpoint:
 
 ```sh
-kubectl exec -it deployment/prom -- sh -c "wget -O - http://localhost:2112/hello"
+kubectl exec -it deployment/prom -- sh -c "wget -O - http://localhost:2112/ping"
 ```
 
 And the metric should be published on **Prometheus**:
