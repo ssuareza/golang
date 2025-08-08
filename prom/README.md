@@ -25,35 +25,35 @@ This is assuming that you already have Prometheus running inside your kubernetes
 
 1. Start minikube:
 
-```sh
-minikube start
-```
+    ```sh
+    minikube start
+    ```
 
-4. Deploy it!
+2. Deploy it!
 
-```sh
-bin/deploy.sh
-```
+    ```sh
+    bin/deploy.sh
+    ```
 
-5. Test it!
+3. Test it!
 
-Make a few requests to the "ping" endpoint:
+    Make a few requests to the "ping" endpoint:
 
-```sh
-kubectl exec -it deployment/prom -- sh -c "wget -O - http://localhost:2112/ping"
-```
+    ```sh
+    kubectl exec -it deployment/prom -- sh -c "wget -O - http://localhost:2112/ping"
+    ```
 
-And the metric should be published on **Prometheus**:
+    And the metric should be published on **Prometheus**:
 
-```sh
-kubectl exec -it deployment/prom -- sh -c "wget -O - http://localhost:2112/metrics" | grep ping_request_count
-```
+    ```sh
+    kubectl exec -it deployment/prom -- sh -c "wget -O - http://localhost:2112/metrics" | grep ping_request_count
+    ```
 
-```text
-# HELP ping_request_count No of request handled by Ping handler
-# TYPE ping_request_count counter
-ping_request_count 6
-```
+    ```text
+    # HELP ping_request_count No of request handled by Ping handler
+    # TYPE ping_request_count counter
+    ping_request_count 6
+    ```
 
 ## References
 
