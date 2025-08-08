@@ -1,0 +1,23 @@
+# Kafka
+
+This is an example of how to use kafka.
+
+## Usage
+
+1. Start kafka:
+
+```sh
+docker-compose up kafka -d
+```
+
+2. Send a message to a topic:
+
+```sh
+go run cmd/producer/main.go
+```
+
+3. The consumer subscribes to the topic and retrieves the messages:
+
+```sh
+go run cmd/consumer/main.go
+```
