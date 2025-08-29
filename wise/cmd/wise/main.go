@@ -107,8 +107,13 @@ func main() {
 		maxTransactionTitle = strings.Replace(maxTransactionTitle, "</strong>", "", -1)
 		maxTransactionParsed := fmt.Sprintf("%s %s", maxTransactionTitle, maxTransaction.Amount)
 
-		// output
-		fmt.Printf("- %s: %.2f EUR (%s)\n", date.Format("2006-01"), sumTransactions, maxTransactionParsed)
+		// Don't print maxTransactionParsed if we spend nothing
+		if len(maxTransaction.Amount) > 0 {
+			fmt.Printf("- %s: %.2f EUR (%s)\n", date.Format("2006-01"), sumTransactions, maxTransactionParsed)
+		} else {
+			fmt.Printf("- %s: %.2f EUR \n", date.Format("2006-01"), sumTransactions)
+		}
+
 		if *verbose {
 			for _, transaction := range transactions.Activities {
 				// process only payments completed
