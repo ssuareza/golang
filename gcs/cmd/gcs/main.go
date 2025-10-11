@@ -11,9 +11,9 @@ import (
 )
 
 var (
-	bucket    = "file-random-322"
-	object    = "file_500MB.bin"
-	localFile = "./file_500MB.bin"
+	bucket    = "file-321"
+	object    = "file.bin"
+	localFile = "./file.bin"
 )
 
 func main() {
