@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prom
+  namespace: default
   labels:
     app: prom
 spec:
@@ -32,6 +33,7 @@ metadata:
     app: prom
     release: prometheus
   name: prom
+  namespace: default
 spec:
   ports:
     - name: "2112"
@@ -47,6 +49,7 @@ metadata:
   labels:
     release: prometheus
   name: prom
+  namespace: default
 spec:
   endpoints:
     - interval: 5s
