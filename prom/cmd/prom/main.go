@@ -1,34 +1,29 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
+	"prom/pkg/metrics"
 
-	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-// Create a prometheus counter
-var pingCounter = prometheus.NewCounter(
-	prometheus.CounterOpts{
-		Name: "ping_request_count",
-		Help: "No of request handled by Ping handler",
-	},
-)
-
 func main() {
-	// Register the counter.
-	prometheus.MustRegister(pingCounter)
+	// Initialize metrics.
+	metrics.Init()
 
-	// Handlers.
-	http.HandleFunc("/ping", ping)
-	http.Handle("/metrics", promhttp.Handler())
-	http.ListenAndServe(":2112", nil)
-}
+	// Create a new ServeMux to use our middleware
+	mux := http.NewServeMux()
 
-// ping handler.
-func ping(w http.ResponseWriter, req *http.Request) {
-	// Increment the counter.
-	pingCounter.Inc()
-	fmt.Fprintf(w, "Hello World!")
+	// Register handlers with the new mux
+	mux.HandleFunc("/", metrics.Health)
+	mux.HandleFunc("/test1", metrics.Health)
+	mux.HandleFunc("/test2", metrics.Health)
+	mux.HandleFunc("/test3", metrics.Health)
+	mux.Handle("/metrics", promhttp.Handler())
+
+	// Wrap the entire mux with our instrumentation
+	instrumentedHandler := metrics.InstrumentHandler(mux)
+
+	// Start the server with the instrumented handler
+	http.ListenAndServe(":2112", instrumentedHandler)
 }
