@@ -46,10 +46,10 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  labels:
-    release: prometheus
   name: prom
   namespace: default
+  labels:
+    release: prometheus
 spec:
   endpoints:
     - interval: 5s
@@ -60,3 +60,71 @@ spec:
     matchLabels:
       app: prom
       release: prometheus
+# ---
+# apiVersion: monitoring.coreos.com/v1
+# kind: PrometheusRule
+# metadata:
+#   name: prom-slo-rules
+#   namespace: default
+#   labels:
+#     release: prometheus
+# spec:
+#   groups:
+#     - name: prom_slo_rules
+#       interval: 1m
+#       rules:
+#         - alert: AvailabilitySLOViolation
+#           expr: sum(rate(http_requests_total{service="prom",status=~"2.."}[5m]))
+#             / sum(rate(http_requests_total{service="prom"}[5m])) < 0.999
+#           for: 5m
+#           labels:
+#             severity: critical
+#           annotations:
+#             summary: "Availability SLO violated for prom service"
+#             description: "Availability dropped below 99.9% for more than 5 minutes."
+
+#         - alert: ErrorRateSLOViolation
+#           expr: sum(rate(http_requests_total{service="prom",status=~"5.."}[5m]))
+#             / sum(rate(http_requests_total{service="prom"}[5m])) > 0.001
+#           for: 5m
+#           labels:
+#             severity: warning
+#           annotations:
+#             summary: "Error rate SLO violated for prom service"
+#             description: "Error rate exceeded 0.1% for more than 5 minutes."
+
+#         - alert: LatencyP95SLOViolation
+#           expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{service="prom"}[5m])) by (le)) > 0.5
+#           for: 5m
+#           labels:
+#             severity: warning
+#           annotations:
+#             summary: "Latency p95 SLO violated for prom service"
+#             description: "95th percentile latency exceeded 500ms for more than 5 minutes."
+
+#         - alert: ErrorBudgetViolation
+#           expr: 1 - (sum(rate(http_requests_total{service="prom",status=~"5.."}[5m])) / sum(rate(http_requests_total{service="prom"}[5m]))) / 0.001 < 0
+#           for: 5m
+#           labels:
+#             severity: critical
+#           annotations:
+#             summary: "Error budget exhausted for prom service"
+#             description: "The error budget for prom service has been fully consumed."
+# ---
+# apiVersion: monitoring.coreos.com/v1
+# kind: AlertmanagerConfig
+# metadata:
+#   name: prom-alert-config
+#   namespace: monitoring
+# spec:
+#   route:
+#     receiver: slack-receiver
+#     groupWait: 30s
+#     groupInterval: 5m
+#     repeatInterval: 1h
+#   receivers:
+#     - name: slack-receiver
+#       slackConfigs:
+#         - apiURL: https://hooks.slack.com/services/T000/B000/XXXX
+#           channel: "#alerts"
+
